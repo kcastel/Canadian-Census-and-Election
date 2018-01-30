@@ -1,62 +1,77 @@
 # Download cenus data
 # http://www12.statcan.gc.ca/datasets/Index-eng.cfm?Temporal=2016&Theme=-1&VNAMEE=&GA=-1&S=0
+# http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/index-eng.cfm
 # Trying to get this information for as small an area as possible,
 # so data was only available for census tracts and dissemination areas.
 
 dir.create("census_data")
 
+#Downloads data
+#Takes - char, char
+DL_data <- function(name, data.url){
+  print(data.url)
+  destination.folder <- paste(paste("census_data/", name, sep = ""))
+  destination.file <- paste(destination.folder, ".zip", sep = "")
+  download.file(data.url,
+                destfile = destination.file)
+  dir.create(destination.folder)
+  unzip(destination.file, exdir = destination.folder)
+}#DL_data
+
+# 2013 Federal Electoral Districts
+
+sources.elect <- data.frame(data.name = c("age_sex", #Age and Sex 98-400-X2016006
+                                    "marital", #Marital Status 98-400-X2016034
+                                    "language_spoken", #First official language spoken 98-400-X2016073
+                                    "mother_tounge"), #Mother Tounge 98-400-X2016051 
+                      data.url = c("http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=109528&OFT=CSV",
+                                   "http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=109656&OFT=CSV",
+                                   "http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=109983&OFT=CSV",
+                                   "http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=109667&OFT=CSV"),
+                       stringsAsFactors = FALSE)
+
+for (i in 1:nrow(sources.elect)){
+  DL_data(paste(sources.elect$data.name[i], "-election", sep = ""), sources.elect$data.url[i])
+}#for
+
+
 # Dissemination area data (400-700 people)
 
-# 98-400-X2016003 
-# Age and sex
-download.file("http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=109525&OFT=CSV",
-              destfile = "census_data/age_sex.zip")
-dir.create("census_data/age_sex")
-unzip("census_data/age_sex.zip", exdir = "census_data/age_sex")
+sources.dissem <- data.frame(data.name = c("age_sex", #Age and sex 98-400-X2016003
+                                           "family_marital", # Family marital 98-400-X2016034 
+                                           "mother_tounge"), #Mother Tounge 98-400-X2016055 
+                             data.url = c("http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=109525&OFT=CSV",
+                                          "http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=109653&OFT=CSV",
+                                          "http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=109977&OFT=CSV"),
+                             stringsAsFactors = FALSE)
 
-
-# 98-400-X2016034 
-# family_marital
-download.file("http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=109653&OFT=CSV",
-              destfile = "census_data/family_marital.zip")
-dir.create("census_data/family_marital")
-unzip("census_data/family_marital.zip", exdir = "census_data/family_marital")
-
-# 98-400-X2016055 
-# Mother Tounge
-download.file("http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=109977&OFT=CSV",
-              destfile = "census_data/mother_tounge.zip")
-dir.create("census_data/mother_tounge")
-unzip("census_data/mother_tounge.zip", exdir = "census_data/mother_tounge")
+for (i in 1:nrow(sources.dissem)){
+  DL_data(sources.dissem$data.name[i], sources.dissem$data.url[i])
+}#for
 
 # Census Tracts (2500-8000 people)
 
-# 98-400-X2016026
-# Families
-download.file("http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=109645&OFT=CSV",
-              destfile = "census_data/families.zip")
-dir.create("census_data/families")
-unzip("census_data/families.zip", exdir = "census_data/families")
+sources.tract <- data.frame(data.name = c("families", #Families 98-400-X2016026
+                                          "income"), #Income 98-400-X2016121 
+                            data.url = c("http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=109645&OFT=CSV",
+                                         "http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=110262&OFT=CSV"),
+                            stringsAsFactors = FALSE)
 
-# 98-400-X2016121 
-# Income
-download.file("http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=110262&OFT=CSV",
-              destfile = "census_data/income.zip")
-dir.create("census_data/income")
-unzip("census_data/income.zip", exdir = "census_data/income")
+for (i in 1:nrow(sources.tract)){
+  DL_data(sources.tract$data.name[i], sources.tract$data.url[i])
+}#for
 
 # Boundary Files (http://www.statcan.gc.ca/pub/92-160-g/92-160-g2016002-eng.htm)
 # From here: http://www12.statcan.gc.ca/census-recensement/2011/geo/bound-limit/bound-limit-2016-eng.cfm
 # Downloading the digital boundary files, geographic markup language
 
-# Dissemination areas
-download.file("http://www12.statcan.gc.ca/census-recensement/2011/geo/bound-limit/files-fichiers/2016/lda_000a16g_e.zip",
-              destfile = "census_data/dissemination_areas.zip")
-dir.create("census_data/dissemination_areas")
-unzip("census_data/dissemination_areas.zip", exdir = "census_data/dissemination_areas")
+boundary.files <- data.frame(data.name = c("dissemination_areas", # Dissemination areas
+                                           "tracts"), # Census Tracts
+                             data.url = c("http://www12.statcan.gc.ca/census-recensement/2011/geo/bound-limit/files-fichiers/2016/lda_000a16g_e.zip",
+                                          "http://www12.statcan.gc.ca/census-recensement/2011/geo/bound-limit/files-fichiers/2016/lct_000a16g_e.zip"),
+                             stringsAsFactors = FALSE)
 
-# census tracts
-download.file("http://www12.statcan.gc.ca/census-recensement/2011/geo/bound-limit/files-fichiers/2016/lct_000a16g_e.zip",
-              destfile = "census_data/tracts.zip")
-dir.create("census_data/tracts")
-unzip("census_data/tracts.zip", exdir = "census_data/tracts")
+for (i in 1:nrow(boundary.files)){
+  DL_data(boundary.files$data.name[i], boundary.files$data.url[i])
+}#for
+
