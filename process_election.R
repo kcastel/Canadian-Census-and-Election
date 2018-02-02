@@ -9,6 +9,8 @@
 library(dplyr)
 library(magrittr)
 
+dir.create("clean_data")
+
 #Table 8 -> partiesbyprovice - Votes per party, by province 
 table8 <- read.csv("election_data/vote_data/table_tableau08.csv",
                    stringsAsFactors = FALSE)
@@ -22,9 +24,9 @@ table8$Political.affiliation <- strsplit(table8$Political.affiliation,"/") %>%
   gsub(pattern = " Party", replacement = "") %>% 
   gsub(pattern = " of Canada", replacement = "") %>%
   gsub(pattern = "Party for ", replacement = "") %>%
+  gsub(pattern = "Accountability, Competency and Transparency", replacement = "Accountability") %>%
   iconv(to = "ASCII//TRANSLIT")
 #Writing file
-dir.create("clean_data")
 write.csv(table8, file = "clean_data/election_table8.csv", quote = FALSE,
           row.names = FALSE)
 
@@ -70,6 +72,8 @@ table12 <- read.csv("election_data/vote_data/table_tableau12.csv",
 names(table12) <- readLines("election_data/vote_data/table_tableau12.csv", n = 1) %>%
   strsplit(",") %>% unlist %>% lapply(function(x) strsplit(x, "/")[[1]][1]) %>% unlist %>% 
   gsub(pattern = " ", replacement = ".") 
+table12$Candidate.Residence <- NULL #this collumn in unneeded and caused some issues
+table12$Candidate.Occupation <- NULL #same reason as above
 #district.numbers <- unique(table12$Electoral.District.Number)
 #Removing french from whole table
 for (i in 1:ncol(table12)){
@@ -87,6 +91,7 @@ table12$Candidate <- lapply(table12$Candidate, function(x) strsplit(x, "/")[[1]]
   gsub(pattern = "PACT", replacement = "Accountability, Competency and Transparency") %>%
   gsub(pattern = "Animal Alliance", replacement = "Animal Alliance Environment Voters") %>%
   gsub(pattern = "Party", replacement = "") %>%
+  gsub(pattern = ", Competency and Transparency", replacement = "") %>%
   gsub(pattern = "\\*", replacement = "") %>%
   iconv(to = "ASCII//TRANSLIT") %>%
   gsub(pattern = " - Allier les forces de nos regions", replacement = "") 
