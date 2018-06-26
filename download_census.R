@@ -23,7 +23,7 @@ DL_data <- function(name, data.url){
 sources.elect <- data.frame(data.name = c("age_sex", #Age and Sex 98-400-X2016006
                                     "marital", #Marital Status 98-400-X2016034
                                     "language_spoken", #First official language spoken 98-400-X2016073
-                                    "mother_tounge"), #Mother Tounge 98-400-X2016051 
+                                    "mother_tongue"), #Mother Tongue 98-400-X2016051 
                       data.url = c("http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=109528&OFT=CSV",
                                    "http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=109656&OFT=CSV",
                                    "http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=109983&OFT=CSV",
@@ -39,7 +39,7 @@ for (i in 1:nrow(sources.elect)){
 
 sources.dissem <- data.frame(data.name = c("age_sex", #Age and sex 98-400-X2016003
                                            "family_marital", # Family marital 98-400-X2016034 
-                                           "mother_tounge"), #Mother Tounge 98-400-X2016055 
+                                           "mother_tongue"), #Mother Tongue 98-400-X2016055 
                              data.url = c("http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=109525&OFT=CSV",
                                           "http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=109653&OFT=CSV",
                                           "http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/dt-td/CompDataDownload.cfm?LANG=E&PID=109977&OFT=CSV"),
